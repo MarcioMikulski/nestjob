@@ -1,19 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AvatarService } from './avatar.service';
-import { Avatar, AvatarSchema } from '../avatars/schema/avatar.schema';
-import { MongooseModule } from '@nestjs/mongoose';
+import { avatarProviders } from './schema/avatar.providers';
 import { HttpModule } from '@nestjs/axios/dist';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      {
-        name: Avatar.name,
-        schema: AvatarSchema,
-      },
-    ]),
-    HttpModule,
-  ],
-  providers: [AvatarService],
+  imports: [HttpModule, DatabaseModule],
+  providers: [AvatarService, ...avatarProviders],
+  exports: [AvatarService],
 })
 export class AvatarModule {}

@@ -1,25 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { Injectable, Inject } from '@nestjs/common';
 import { Model } from 'mongoose';
+import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { User, UserDocument } from '../users/schemas/user.schema';
 import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name)
-    private readonly userModel: Model<UserDocument>,
+    @Inject('USER_MODEL')
+    private userModel: Model<User>,
     private readonly httpService: HttpService,
   ) {}
 
-  async create(createuserDto: CreateUserDto): Promise<UserDocument> {
-    const user = new this.userModel(createuserDto);
-    return user.save();
+  async create(createuserDto: CreateUserDto): Promise<User> {
+    const createdUser = new this.userModel(createuserDto);
+    return createdUser.save();
   }
 
-  async findAll(): Promise<UserDocument[]> {
+  async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
 

@@ -1,19 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
+import { Injectable, Inject } from '@nestjs/common';
+import { Avatar } from '../entities/avatar.entity';
 import { CreateAvatarDto } from 'src/dto/create-avatar.dto';
-
-import { Avatar, AvatarDocument } from '../avatars/schema/avatar.schema';
 import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class AvatarService {
   constructor(
-    @InjectModel(Avatar.name)
-    private readonly avatarModel: Model<AvatarDocument>,
-    private readonly httpService: HttpService,
+    @Inject('AVATAR_MODEL')
+    private avatarModel: Model<Avatar>,
   ) {}
 
   converteImageToBase64(image: string) {
@@ -21,12 +17,13 @@ export class AvatarService {
     return data;
   }
 
-  saveAvatar(createavatarDto: CreateAvatarDto) {
-    const avatar = new this.avatarModel(createavatarDto);
-    return avatar.save();
+  async saveAvatar(createavatarDto: CreateAvatarDto): Promise<Avatar> {
+    const avatar = this.avatarModel.create(createavatarDto);
+    return avatar;
   }
 
-  /* async findOne(id: string) {
-    return this.userModel.findById(id);
-  } */
+  async getAvatar(id: string): Promise<Avatar> {
+    const avatar = this.avatarModel.findById(id);
+    return avatar;
+  }
 }

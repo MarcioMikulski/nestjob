@@ -1,3 +1,4 @@
-import { Avatar } from '../entities/avatar.entity';
-
-export class CreateAvatarDto extends Avatar {}
+export class CreateAvatarDto {
+  readonly userId: number;
+  readonly avatar: Blob;
+}
