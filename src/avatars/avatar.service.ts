@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { CreateAvatarDto } from 'src/dto/create-avatar.dto';
 
-import { Avatar, AvatarDocument } from '../users/schemas/avatar.schema';
+import { Avatar, AvatarDocument } from '../avatars/schema/avatar.schema';
 import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 
@@ -15,12 +15,6 @@ export class AvatarService {
     private readonly avatarModel: Model<AvatarDocument>,
     private readonly httpService: HttpService,
   ) {}
-
-  getUserById(userId: number): Promise<AxiosResponse<any>> {
-    return this.httpService.axiosRef.get(
-      `https://reqres.in/api/users/${userId}`,
-    );
-  }
 
   converteImageToBase64(image: string) {
     const data = Buffer.from(image).toString('base64');
